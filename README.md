@@ -295,6 +295,91 @@ sfdx force:lightning:component:create -n AccountMap -d force-app/main/default/au
 sfdx force:source:push
 ```
 
+28. Create `AccountsLoaded` Lightning Event to Add Markers to the Map
+```
+sfdx force:lightning:event:create -n AccountsLoaded -d force-app/main/default/aura
+```
+
+29. Modify `AccountsLoaded.evt`
+```xml
+<aura:event type="APPLICATION">
+    <aura:attribute name="accounts" Type="Account[]"/>
+</aura:event>
+```
+
+30. Modify `AccountList.cmp` to and add an event declaration and map attribute. The map attribute loads the Leaflet stylesheet from the scratch org's static resources.
+```html
+<aura:component controller="AccountController">
+    <aura:registerEvent name="accountsLoaded" type="c:AccountsLoaded"/>
+    <aura:attribute name="accounts" type="Account[]"/>
+    <ltng:require styles="/resource/leaflet/leaflet.css" scripts="/resource/leaflet/leaflet.js" afterScriptsLoaded="{!c.doInit}" />
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <ul>
+    <aura:iteration items="{!v.accounts}" var="account">
+        <c:AccountListItem account="{!account}"/>
+    </aura:iteration>
+    </ul>
+</aura:component>
+```
+
+31. Modify `AccountsListController.js` to add the `AccountsLoaded` event
+```javascript
+({
+    doInit : function(component, event) {
+        var action = component.get("c.findAll");
+        action.setCallback(this, function(a) {
+            component.set("v.accounts", a.getReturnValue());
+            var event = $A.get("e.c:AccountsLoaded");
+            event.setParams({"accounts": a.getReturnValue()});
+            event.fire();
+        });
+    $A.enqueueAction(action);
+    }
+})
+```
+
+32. Modify `AccountMap.cmp` to add the `AccountsLoaded` event handler
+```html
+<aura:component>
+    <aura:attribute name="map" type="Object"/>
+    <aura:handler event="c:AccountsLoaded" action="{!c.accountsLoaded}"/>
+    <ltng:require styles="/resource/leaflet/leaflet.css"
+        scripts="/resource/leaflet/leaflet.js"
+        afterScriptsLoaded="{!c.jsLoaded}" />
+    <div id="map"></div>
+</aura:component>
+```
+
+33. Modify AccountMapController.js` to add the `accountsLoaded` function
+```javascript
+({
+  jsLoaded: function(component, event, helper) {
+    var map = L.map('map', { zoomControl: false }).setView([37.784173, -122.401557], 14)
+    L.tileLayer(
+      'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}',
+      {
+        attribution: 'Tiles © Esri'
+      }).addTo(map)
+    component.set('v.map', map)
+  },
+  accountsLoaded: function(component, event, helper) {
+      // Add markers
+      var map = component.get('v.map');
+      var accounts = event.getParam('accounts');
+      for (var i=0; i<accounts.length; i++) {
+          var account = accounts[i];
+          var latLng = [account.Location__Latitude__s, account.Location__Longitude__s];
+          L.marker(latLng, {account: account}).addTo(map);
+      }  
+  }
+})
+```
+
+34. Push changes to scratch org
+```
+sfdx force:source:push
+```
+
 ## Resources
 
 - Leaflet
