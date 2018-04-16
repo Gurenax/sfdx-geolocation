@@ -225,8 +225,80 @@ sfdx force:lightning:component:create -n AccountList -d force-app/main/default/a
 sfdx force:source:push
 ```
 
+19. Download [Leaflet](http://leafletjs.com/download.html) javascript library
+
+20. Install in scratch org as instructed in:
+```
+https://trailhead.salesforce.com/trails/sfdx_get_started/modules/sfdx_app_dev/units/sfdx_app_dev_create_visuals
+```
+
+21. Pull the static resource from scratch org
+```
+sfdx force:source:pull
+```
+
+22. Create `AccountMap` lightning component
+```
+sfdx force:lightning:component:create -n AccountMap -d force-app/main/default/aura
+```
+
+23. Modify `AccountMap.cmp`
+```html
+<aura:component>
+    <aura:attribute name="map" type="Object"/>
+    <ltng:require styles="/resource/leaflet/leaflet.css"
+        scripts="/resource/leaflet/leaflet.js"
+        afterScriptsLoaded="{!c.jsLoaded}" />
+    <div id="map"></div>
+</aura:component>
+```
+
+24. Modify `AccountMapController.js`
+```javascript
+({
+  jsLoaded: function(component, event, helper) {
+    var map = L.map('map', { zoomControl: false }).setView([37.784173, -122.401557], 14)
+    L.tileLayer(
+      'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}',
+      {
+        attribution: 'Tiles © Esri'
+      }).addTo(map)
+    component.set('v.map', map)
+  }
+})
+```
+
+25. Modify `AccountMap.css`
+```css
+.THIS {
+  width: 100%;
+  height: 100%;
+}
+```
+
+26. Update the `AccountLocator.cmp` to use `AccountMap` component
+```html
+<aura:component implements="force:appHostable">
+    <div>
+        <div>
+            <c:AccountMap />
+        </div>
+        <div>
+            <c:AccountList />
+        </div>
+    </div>
+</aura:component>
+```
+
+27. Push changes to scratch org
+```
+sfdx force:source:push
+```
+
 ## Resources
 
+- Leaflet
+  - http://leafletjs.com/download.html
 
 ## Description of Files and Directories
 
