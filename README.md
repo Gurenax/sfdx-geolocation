@@ -71,7 +71,26 @@ sfdx force:data:tree:export -q "SELECT Name, Location__Latitude__s, Location__Lo
 
 ## Dev, Build and Test
 
+1. Create Apex Controller Class
+```
+sfdx force:apex:class:create -n AccountController -d force-app/main/default/classes
+```
 
+2. Modify `AccountController.cls`
+```java
+public with sharing class AccountController {
+  @AuraEnabled
+  public static List<Account> findAll() {
+  return [SELECT Id, Name, Location__Latitude__s, Location__Longitude__s
+          FROM Account
+          WHERE Location__Latitude__s != NULL AND Location__Longitude__s !=
+          NULL
+          LIMIT 50];
+  }
+}
+```
+
+3. 
 ## Resources
 
 
