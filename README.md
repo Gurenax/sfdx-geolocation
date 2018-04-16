@@ -52,6 +52,21 @@ git commit -m "Add custom object and permset"
 git push origin master
 ```
 
+10. Create Sample Data as instructed in:
+```
+https://trailhead.salesforce.com/trails/sfdx_get_started/modules/sfdx_app_dev/units/sfdx_app_dev_create_app
+```
+
+11. Create data folder
+```
+mkdir data
+```
+
+12. Export the created sample data:
+```
+sfdx force:data:tree:export -q "SELECT Name, Location__Latitude__s, Location__Longitude__s FROM Account WHERE Location__Latitude__s != NULL AND Location__Longitude__s != NULL" -d ./data
+```
+
 ---
 
 ## Dev, Build and Test
