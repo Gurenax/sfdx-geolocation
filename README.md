@@ -71,6 +71,7 @@ sfdx force:data:tree:export -q "SELECT Name, Location__Latitude__s, Location__Lo
 
 ## Dev, Build and Test
 
+### Create the App
 1. Create `Apex Controller Class`
 ```
 sfdx force:apex:class:create -n AccountController -d force-app/main/default/classes
@@ -378,6 +379,32 @@ sfdx force:lightning:event:create -n AccountsLoaded -d force-app/main/default/au
 34. Push changes to scratch org
 ```
 sfdx force:source:push
+```
+
+### Validate the App
+1. Create new scratch org
+```
+sfdx force:org:create -f config/project-scratch-def.json -a GeoTestOrg
+```
+
+2. Push local source and metadata to GeoTestOrg
+```
+sfdx force:source:push -u GeoTestOrg
+```
+
+3. Add permission set for GeoTestOrg
+```
+sfdx force:user:permset:assign -n Geolocation -u GeoTestOrg
+```
+
+4. Load sample data to GeoTestOrg
+```
+sfdx force:data:tree:import -f data/Account.json -u GeoTestOrg
+```
+
+5. Open GeoTestOrg
+```
+sfdx force:org:open -u GeoTestOrg
 ```
 
 ## Resources
