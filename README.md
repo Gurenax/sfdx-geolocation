@@ -71,7 +71,7 @@ sfdx force:data:tree:export -q "SELECT Name, Location__Latitude__s, Location__Lo
 
 ## Dev, Build and Test
 
-1. Create Apex Controller Class
+1. Create `Apex Controller Class`
 ```
 sfdx force:apex:class:create -n AccountController -d force-app/main/default/classes
 ```
@@ -90,7 +90,44 @@ public with sharing class AccountController {
 }
 ```
 
-3. 
+3. Push changes to scratch org
+```
+sfdx force:source:push
+```
+
+4. Create `Lightning Component`
+```
+sfdx force:lightning:component:create -n AccountLocator -d force-app/main/default/aura
+```
+
+5. Modify `AccountLocator.cmp`
+```html
+<aura:component implements="force:appHostable">
+  <div>
+    <div>AccountMap goes here</div>
+    <div>AccountList goes here</div>
+  </div>
+</aura:component>
+```
+
+6. Modify `AccountLocator.css`
+```css
+.THIS {
+  position:absolute;
+  height: 100%;
+  width: 100%;
+  background: #FFFFFF;
+}
+.THIS>div {
+  height: 50%;
+}
+```
+
+7. Push source to scratch org
+```
+sfdx force:source:push
+```
+
 ## Resources
 
 
