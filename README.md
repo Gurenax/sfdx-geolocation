@@ -1,4 +1,5 @@
-# SFDX  App
+# SFDX Geolocation App
+- A salesforce dx geolocation app created from scratch.
 
 ## Setup
 1. Created the project
