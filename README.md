@@ -7,38 +7,45 @@ sfdx force:project:create -n sfdx-geolocation
 cd sfdx-geolocation
 ```
 
-2. Create a scratch org with the alias GeoAppScratch:
-```
-sfdx force:org:create -s -f config/project-scratch-def.json -a GeoAppScratch
-```
-
-3. Open scratch org
-```
-sfdx force:org:open
-```
-
-4. Create custom fields as instructed in:
-```
-https://trailhead.salesforce.com/trails/sfdx_get_started/modules/sfdx_app_dev/units/sfdx_app_dev_create_app
-```
-
-5. Assign permission set to user:
-```
-sfdx force:user:permset:assign -n Geolocation
-```
-
-6. Pull Changes into Your Project
-```
-sfdx force:source:pull
-```
-
-7. Best practice, add `.sfdx` folder to `.gitignore` file
+2. Best practice, add `.sfdx` folder to `.gitignore` file
 ```
 # Ignore sfdx folder
 .sfdx
 ```
 
-8. Best practice, push all changes to GitHub
+3. Push to GitHub
+```
+git init
+git add -A "Initialise project with sfdx"
+git push origin master
+```
+
+4. Create a scratch org with the alias GeoAppScratch:
+```
+sfdx force:org:create -s -f config/project-scratch-def.json -a GeoAppScratch
+```
+
+5. Open scratch org
+```
+sfdx force:org:open
+```
+
+6. Create custom fields as instructed in:
+```
+https://trailhead.salesforce.com/trails/sfdx_get_started/modules/sfdx_app_dev/units/sfdx_app_dev_create_app
+```
+
+7. Assign permission set to user:
+```
+sfdx force:user:permset:assign -n Geolocation
+```
+
+8. Pull Changes into Your Project
+```
+sfdx force:source:pull
+```
+
+9. Best practice, push all changes to GitHub
 ```
 git add -A
 git commit -m "Add custom object and permset"
