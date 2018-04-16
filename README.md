@@ -128,6 +128,103 @@ sfdx force:lightning:component:create -n AccountLocator -d force-app/main/defaul
 sfdx force:source:push
 ```
 
+8. Set Up a Tab to Open the Lightning Component as instructed in:
+```
+https://trailhead.salesforce.com/trails/sfdx_get_started/modules/sfdx_app_dev/units/sfdx_app_dev_build_app
+```
+
+9. Pull the custom tab changes from the scratch org
+```
+sfdx force:source:pull
+```
+
+10. Create `AccountListItem` lightning component
+```
+sfdx force:lightning:component:create -n AccountListItem -d force-app/main/default/aura
+```
+
+11. Modify `AccountListItem.cmp`
+```html
+<aura:component>
+  <aura:attribute name="account" type="Account"/>
+  <li><a>{!v.account.Name}</a></li>
+</aura:component>
+```
+
+12. Modify `AccountListItem.css`
+```css
+.THIS {
+    border-bottom: solid 1px #DDDDDD;
+}
+.THIS a {
+    display: block;
+    padding: 20px;
+    color: inherit;
+}
+.THIS a:active {
+    background-color: #E8F4FB;
+}
+```
+
+13. Create `AccountList` lightning component
+```
+sfdx force:lightning:component:create -n AccountList -d force-app/main/default/aura
+```
+
+14. Modify `AccountList.cmp`
+```html
+<aura:component controller="AccountController">
+    <aura:attribute name="accounts" type="Account[]"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <ul>
+    <aura:iteration items="{!v.accounts}" var="account">
+        <c:AccountListItem account="{!account}"/>
+    </aura:iteration>
+    </ul>
+</aura:component>
+```
+
+15. Modify `AccountListController.js`
+```javascript
+({
+  doInit: function(component, event) {
+    var action = component.get('c.findAll')
+    action.setCallback(this, function(a) {
+      component.set('v.accounts', a.getReturnValue())
+    })
+    $A.enqueueAction(action)
+  }
+})
+```
+
+16. Modify `AccountList.css`
+```css
+.THIS {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  background: #FFFFFF;
+  height: 100%;
+}
+```
+
+17. Modify `AccountLocator.cmp` to use the `AccountList` component
+```html
+<aura:component implements="force:appHostable">
+    <div>
+        <div>AccountMap goes here</div>
+        <div>
+          <c:AccountList/>
+        </div>
+    </div>
+</aura:component>
+```
+
+18. Push source to scratch org
+```
+sfdx force:source:push
+```
+
 ## Resources
 
 
