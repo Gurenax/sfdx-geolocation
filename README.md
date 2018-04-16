@@ -32,6 +32,18 @@ sfdx force:user:permset:assign -n Geolocation
 sfdx force:source:pull
 ```
 
+7. Best practice, add `.sfdx` folder to `.gitignore` file
+```
+# Ignore sfdx folder
+.sfdx
+```
+
+8. Best practice, push all changes to GitHub
+```
+git add -A
+git commit -m "Add custom object and permset"
+git push origin master
+```
 
 ---
 
