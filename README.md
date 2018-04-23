@@ -17,7 +17,8 @@ cd sfdx-geolocation
 3. Push to GitHub
 ```
 git init
-git add -A "Initialise project with sfdx"
+git add -A
+git commit -m "Initialise project with sfdx"
 git push origin master
 ```
 
